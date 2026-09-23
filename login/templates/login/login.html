@@ -24,6 +24,12 @@
     {% endif %}
   </div>
 
+  {% if messages %}
+    {% for msg in messages %}
+        <div class="alert alert-{{msg.tags}}">{{msg}}</div>
+    {% endfor %}
+  {% endif %}
+
   <button type="submit" class="btn btn-primary w-100">Login</button>
 </form>
 {% endblock content %}
