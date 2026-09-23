@@ -7,5 +7,5 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='login:login_view_url')
 def show_strategies(request):
-    strats = Strategy.objects.filter(user=request.user)
+    strats = Strategy.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'strategies/strategies.html', {'strats': strats})
