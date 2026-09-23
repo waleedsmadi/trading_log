@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+
+
+{% block content %}
+<form method="POST" style="width: 500px; margin: auto; margin-top: 300px; padding: 20px; border: solid 1px white; color: white; border-radius: 10px;">
+    {% csrf_token %}
+  <div class="mb-3">
+    <label for="login-username" class="form-label">Username</label>
+    {{form.username}}
+    {% if form.username.errors %}
+        {% for err in form.username.errors %}
+            <p style="color: red;">{{err}}</p>
+        {% endfor %}
+    {% endif %}
+  </div>
+  <div class="mb-3">
+    <label for="login-password" class="form-label">Password</label>
+    {{form.password}}
+    {% if form.password.errors %}
+        {% for err in form.password.errors %}
+            <p style="color: red;">{{err}}</p>
+        {% endfor %}
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+{% endblock content %}
