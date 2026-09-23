@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from .forms import LoginForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from django_ratelimit.decorators import ratelimit
 
 
 
+@ratelimit(key='ip', method='POST', rate='10/m')
 def login_view(request):
     form = LoginForm()
     if request.method == "POST":
