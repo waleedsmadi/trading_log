@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cab]
+db.sqlite3
+trading_log_venv/
+.env
