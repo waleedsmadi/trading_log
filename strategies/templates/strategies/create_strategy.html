@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Create a strategy{% endblock title %}
+
+{% block content %}
+<form method="POST" style="width: 500px; margin: auto; color: white; margin-top: 100px;">
+    {% csrf_token %}
+    {% for field in create_strategy_form %}
+        <div class="mb-3">
+            {% if field.name == "title" %}
+                <label for="create-strategy-title" class="form-label">Title</label>
+                {{field}}
+            {% elif field.name == "rules" %}
+                <label for="create-strategy-rules" class="form-label">Rules</label>
+                {{field}}
+            {% elif field.name == "balance" %}
+                <label for="create-strategy-balance" class="form-label">Balance</label>
+                {{field}}
+            {% elif field.name == "test_days" %}
+                <label for="create-strategy-test-days" class="form-label" >Test days</label>
+                {{field}}
+            {% endif %}
+
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <p style="color: red;">{{err}}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button class="btn btn-primary w-100">Create</button>
+</form>
+{% endblock content %}
