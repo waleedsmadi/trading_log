@@ -21,36 +21,68 @@
 <!-- // Start the container // -->
 <div class="container d-flex flex-wrap mt-5" style="padding: 20px;">
 
+    {% if not strats %}
+        <h2 class="center-text" style="color: white;">There are no strategies!!</h2>
+    {% else %}
+        {% for strat in strats %}
+        <!-- // Start card // -->
+        <div class="card ms-3 mb-2" style="width: 400px;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">{{strat.title}}</h5>
+                    <div class="dropdown">
 
-    {% for strat in strats %}
-    <!-- // Start card // -->
-    <div class="card ms-3 mb-2" style="width: 400px;">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="card-title">{{strat.title}}</h5>
-                <div class="dropdown">
-
-                <i class="fa-solid fa-ellipsis-vertical " id="dropdown-strategy" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
-                <ul class="dropdown-menu" aria-labelledby="dropdown-strategy">
-                    <li><a class="dropdown-item" href="{% url 'strategies:edit_strategy_url' strat.pk %}">Edit</a></li>
-                    <li><a class="dropdown-item" href="#">Remove</a></li>
-                </ul>
+                    <i class="fa-solid fa-ellipsis-vertical " id="dropdown-strategy" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"></i>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown-strategy">
+                        <li><a class="dropdown-item" href="{% url 'strategies:edit_strategy_url' strat.pk %}">Edit</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#remove-strategy-{{strat.pk}}">Remove</a></li>
+                    </ul>
+                    </div>
                 </div>
+                <hr>
+                
+                <p class="card-text"><b>Test days: </b>{{strat.test_days}}<br>
+                    <b>Balance: </b>{{strat.balance}}$<br>
+                    <b>Created at: </b>{{strat.created_at}}<br>
+                    <b>Updated at: </b>{{strat.updated_at}}
+                </p>
+                <a href="#" class="btn btn-primary">Deals</a>
+                <a href="#" class="btn btn-primary">Show rules</a>
             </div>
-            <hr>
-            
-            <p class="card-text"><b>Test days: </b>{{strat.test_days}}<br>
-                <b>Balance: </b>{{strat.balance}}$<br>
-                <b>Created at: </b>{{strat.created_at}}<br>
-                <b>Updated at: </b>{{strat.updated_at}}
-            </p>
-            <a href="#" class="btn btn-primary">Deals</a>
-            <a href="#" class="btn btn-primary">Show rules</a>
         </div>
-    </div>
-    <!-- // End card // -->
+        <!-- // End card // -->
 
-    {% endfor %}
+
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="remove-strategy-{{strat.pk}}" tabindex="-1" aria-labelledby="removeStrategyLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeStrategyLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you realy want to remove `{{strat.title}}` strategy?
+            </div>
+            <form action="{% url 'strategies:remove_strategy_url' strat.pk %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+        </div>
+
+        {% endfor %}
+    {% endif %}
+
+
 
 
 </div>

@@ -56,7 +56,7 @@ def edit_strategy(request, strategy_id):
         if edit_strategy_form.is_valid():
             strategy = edit_strategy_form.save(commit=False)
 
-            # Check if there is a duplicated title
+            # Check if there is a duplicated title execept the current strategy!
             if Strategy.objects.filter(user=request.user, title=strategy.title).exclude(pk=strategy.pk).exists():
                 edit_strategy_form.add_error('title', f'This title `{strategy.title}` already exists!')
                 return render(request, 'strategies/edit_strategy.html', {'edit_strategy_form': edit_strategy_form})
@@ -66,3 +66,20 @@ def edit_strategy(request, strategy_id):
             return redirect('strategies:edit_strategy_url', strategy_id=strategy.pk)
         return render(request, 'strategies/edit_strategy.html', {'edit_strategy_form': edit_strategy_form})
     return render(request, 'strategies/edit_strategy.html', {'edit_strategy_form': edit_strategy_form})
+
+
+
+
+
+
+
+@ratelimit(key='ip', method='POST', rate='10/m')
+@login_required(login_url='login:login_view_url')
+@require_POST
+def remove_strategy(request, strategy_id):
+    strategy = get_object_or_404(Strategy, pk=strategy_id)
+    if strategy.user != request.user:
+        return HttpResponseForbidden
+    
+    strategy.delete()
+    return redirect('strategies:show_strategies_url')
