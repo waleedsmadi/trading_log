@@ -22,8 +22,7 @@ def login_view(request):
                 return redirect('login:login_view_url')
 
             login(request, user)
-            messages.success(request, 'Success')
-            return redirect('login:login_view_url')
+            return redirect('strategies:show_strategies_url')
         else:
             return render(request, 'login/login.html', {'form': form})
 
