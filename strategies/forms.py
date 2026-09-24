@@ -39,8 +39,6 @@ class CreateStrategyForm(forms.ModelForm):
         title = self.cleaned_data.get('title')
         if not title:
             raise ValidationError('The `title` field should not be empty!')
-        if Strategy.objects.filter(title=title).exists():
-            raise ValidationError(f'The title `{title}` already exists!')
         return title
 
     def clean_rules(self):
