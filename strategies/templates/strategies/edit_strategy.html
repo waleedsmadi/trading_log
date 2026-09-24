@@ -27,6 +27,12 @@
             {% endif %}
         </div>
     {% endfor %}
-    <button class="btn btn-primary w-100">Edit</button>
+    <button class="btn btn-primary w-100 mb-2">Edit</button>
+    <a href="{% url 'strategies:show_strategies_url' %}" class="mt-2">Back to strategies</a>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{msg.tags}} mt-2">{{msg}}</div>
+        {% endfor %}
+    {% endif %}
 </form>
 {% endblock content %}
