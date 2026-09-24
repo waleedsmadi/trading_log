@@ -47,7 +47,7 @@
                     <b>Updated at: </b>{{strat.updated_at}}
                 </p>
                 <a href="#" class="btn btn-primary">Deals</a>
-                <a href="#" class="btn btn-primary">Show rules</a>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#show-rules-{{strat.pk}}">Show rules</a>
             </div>
         </div>
         <!-- // End card // -->
@@ -56,12 +56,12 @@
 
 
 
-        <!-- Modal -->
+        <!-- // Start modal for remove strategy // -->
         <div class="modal fade" id="remove-strategy-{{strat.pk}}" tabindex="-1" aria-labelledby="removeStrategyLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="removeStrategyLabel">Modal title</h5>
+                <h5 class="modal-title" id="removeStrategyLabel">Remove the strategy</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -78,6 +78,32 @@
             </div>
         </div>
         </div>
+        <!-- // End modal for remove strategy // -->
+
+
+
+
+        <!-- // Start modal for display the rules // -->
+        <div class="modal fade" id="show-rules-{{strat.pk}}" tabindex="-1" aria-labelledby="showRulesStrategyLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="showRulesStrategyLabel">Rules of the Strategy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{strat.rules|linebreaks}}
+            </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <!-- // End modal for display the rules // -->
+
 
         {% endfor %}
     {% endif %}
