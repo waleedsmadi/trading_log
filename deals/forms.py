@@ -94,11 +94,15 @@ class CreateDealForm(forms.ModelForm):
         to_price = cleaned_data.get('to_price')
         result = cleaned_data.get('result')
         deal_type = cleaned_data.get('deal_type')
+        amount = cleaned_data.get('amount')
 
         if from_price is None or to_price is None:
             return cleaned_data
 
         if deal_type is None or result is None:
+            return cleaned_data
+
+        if amount is None:
             return cleaned_data
 
         if from_price <= to_price and deal_type == "BUY" and result == "LOS":
@@ -112,6 +116,14 @@ class CreateDealForm(forms.ModelForm):
 
         if from_price >= to_price and deal_type == "SELL" and result == "LOS":
             raise ValidationError('You lost a `sell` deal, the starting price must be less than the final price!')
+
+        if result == "EVE":
+            if from_price != to_price or amount != 0:
+                raise ValidationError('An even deal must have the same starting and final price, and amount must be zero!')
+
+        if amount == 0 and result != "EVE":
+            raise ValidationError('The amount can be zero only when the result is even!')
+        
 
         return cleaned_data
 
