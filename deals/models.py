@@ -28,6 +28,7 @@ class Pairs(models.TextChoices):
 class Result(models.TextChoices):
     profit = "PRF", "Profit"
     loss = "LOS", "Loss"
+    even = "EVE", "Even"
 
 class Deal(models.Model):
     strategy = models.ForeignKey(
@@ -44,7 +45,7 @@ class Deal(models.Model):
     is_followed_rules = models.BooleanField(verbose_name='Is Followed Rules', default=True)
     description = models.TextField(verbose_name='Description', null=True, blank=True)
     img = models.ImageField(verbose_name='Chart Image', upload_to='chart/images/%Y%m%d', null=True, blank=True)
-    result = models.BooleanField(verbose_name='Result', choices=Result.choices)
+    result = models.CharField(max_length=6, verbose_name='Result', choices=Result.choices)
     amount = models.DecimalField(verbose_name='Amount', max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(verbose_name='Created At', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Updated At', auto_now=True)
@@ -54,8 +55,11 @@ class Deal(models.Model):
         ordering = ['-created_at',]
         constraints = [
             models.CheckConstraint(name='chk_deal_from_price_to_price', condition=(
-                (Q(from_price__lt=F('to_price')) & Q(deal_type=DealType.BUY)) | 
-                (Q(from_price__gt=F('to_price')) & Q(deal_type=DealType.SELL))
+                (Q(from_price__lt=F('to_price')) & Q(deal_type=DealType.BUY) & Q(result=Result.profit)) | 
+                (Q(from_price__gt=F('to_price')) & Q(deal_type=DealType.SELL) & Q(result=Result.profit)) |
+                (Q(from_price__gt=F('to_price')) & Q(deal_type=DealType.BUY) & Q(result=Result.loss)) |
+                (Q(from_price__lt=F('to_price')) & Q(deal_type=DealType.SELL) & Q(result=Result.loss)) |
+                (Q(amount=0) & Q(from_price=F('to_price')) & Q(result=Result.even))
             )),
 
             models.CheckConstraint(name='chk_deal_from_price', condition=Q(from_price__gt=0)),
