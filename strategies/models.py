@@ -24,6 +24,6 @@ class Strategy(models.Model):
         verbose_name_plural = "Strategies"
 
 
-        def __str__(self):
-            return self.title
+    def __str__(self):
+        return self.title
 

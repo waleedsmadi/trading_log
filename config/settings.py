@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'login.apps.LoginConfig',
-    'strategies.apps.StrategiesConfig'
+    'strategies.apps.StrategiesConfig',
+    'deals.apps.DealsConfig',
 ]
 
 MIDDLEWARE = [
