@@ -4,7 +4,7 @@ from .models import Strategy
 
 @admin.register(Strategy)
 class StrategyAdmin(admin.ModelAdmin):
-    list_display = ['user', 'title', 'balance', 'test_days', 'created_at', 'updated_at']
+    list_display = ['user', 'id', 'title', 'balance', 'test_days', 'created_at', 'updated_at']
     list_filter = ['user', 'balance']
     search_fields = ['user', 'title', 'rules']
     list_display_links = ['user', 'title']
