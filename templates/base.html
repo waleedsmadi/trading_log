@@ -13,6 +13,11 @@
 <body style="background-color: #141619;">
 
 
+    {% if user.is_authenticated %}
+        <div class="container fixed-top">
+            {% include 'parts/nav.html' %}
+        </div>
+    {% endif %}
 
     
     {% block content %}

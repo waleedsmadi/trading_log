@@ -33,7 +33,7 @@ class CreateDealForm(forms.ModelForm):
 
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': '20',
+                'rows': '5',
                 'cols': '20',
             }),
 
