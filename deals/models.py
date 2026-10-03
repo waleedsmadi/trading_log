@@ -65,7 +65,7 @@ class Deal(models.Model):
                 (Q(from_price__gt=F('to_price')) & Q(deal_type=DealType.BUY) & Q(result=Result.loss)) |
                 (Q(from_price__lt=F('to_price')) & Q(deal_type=DealType.SELL) & Q(result=Result.loss)) |
                 (Q(amount=0) & Q(from_price=F('to_price')) & Q(result=Result.even))
-            ),violation_error_message='The deal prices do not match the selected deal type and result.'),
+            ),violation_error_message=''),
 
             models.CheckConstraint(name='chk_deal_from_price', condition=Q(from_price__gt=0)),
             models.CheckConstraint(name='chk_deal_to_price', condition=Q(to_price__gt=0)),

@@ -2,7 +2,7 @@
 {% block title %}Create a deal{% endblock title %}
 
 {% block content %}
-<form method="POST" style="width: 500px; margin: auto; color: white; margin-top: 50px; margin-bottom: 50px;" enctype="multipart/form-data">
+<form method="POST" style="width: 600px; margin: auto; color: white; margin-top: 50px; margin-bottom: 50px;" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in create_deal_form %}
         <div class="mb-3">

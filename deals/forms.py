@@ -106,23 +106,23 @@ class CreateDealForm(forms.ModelForm):
             return cleaned_data
 
         if from_price <= to_price and deal_type == "BUY" and result == "LOS":
-            raise ValidationError('You lost a `buy` deal, the starting price must be higher than the final price!')
+            raise ValidationError('You lost a `buy` deal, the `from_price` must be higher than the `to_price`')
 
         if from_price >= to_price and deal_type == "BUY" and result == "PRF":
-            raise ValidationError('You won a `buy` deal, the starting price must be less than the final price!')
+            raise ValidationError('You won a `buy` deal, the `from_price` must be less than the `to_price`')
 
         if from_price <= to_price and deal_type == "SELL" and result == "PRF":
-            raise ValidationError('You won a `sell` deal, the starting price must be higher than the final price!')
+            raise ValidationError('You won a `sell` deal, the `from_price` must be higher than the `to_price`')
 
         if from_price >= to_price and deal_type == "SELL" and result == "LOS":
-            raise ValidationError('You lost a `sell` deal, the starting price must be less than the final price!')
+            raise ValidationError('You lost a `sell` deal, the `from_price` must be less than the `to_price`')
 
         if result == "EVE":
             if from_price != to_price or amount != 0:
-                raise ValidationError('An even deal must have the same starting and final price, and amount must be zero!')
+                raise ValidationError('An even deal must have the same `from` and `to` price, and `amount` must be zero!')
 
         if amount == 0 and result != "EVE":
-            raise ValidationError('The amount can be zero only when the result is even!')
+            raise ValidationError('The `amount` can be zero only when the result is even!')
         
 
         return cleaned_data
