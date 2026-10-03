@@ -48,7 +48,7 @@ def create_strategy(request):
 def edit_strategy(request, strategy_id):
     strategy = get_object_or_404(Strategy, pk=strategy_id)
     if strategy.user != request.user:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     edit_strategy_form = CreateStrategyForm(instance=strategy)
     if request.method == 'POST':
@@ -79,7 +79,7 @@ def edit_strategy(request, strategy_id):
 def remove_strategy(request, strategy_id):
     strategy = get_object_or_404(Strategy, pk=strategy_id)
     if strategy.user != request.user:
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
     
     strategy.delete()
     return redirect('strategies:show_strategies_url')

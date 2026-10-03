@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Deals{% endblock title %}
+
+{% block content %}
+
+
+<!-- // Start create deal button // -->
+<div class="fixed-top d-flex" style="padding: 20px; pointer-events: none;">
+    <a href="#" class="ms-auto" style="pointer-events: auto;">
+        <i class="fa-solid fa-plus" style="color: white; font-size: 45px; cursor: pointer; text-shadow: 0px 2px 4px rgba(0,0,0,0.5);"></i>
+    </a>
+</div>
+<!-- // End create deal button // -->
+
+<main class="felx">
+    <!-- // Start the container // -->
+<div class="container mt-5" style="padding: 20px;">
+
+    {% if not deals %}
+        <h2 class="text-center" style="color: white;">There are no deals!!</h2>
+    {% else %}
+        <!-- استخدام نظام الـ Grid لترتيب الكاردز بشكل متناسق وثابت -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for deal in deals %}
+            <div class="col">
+                <!-- // Start card // -->
+                <div class="card h-100 shadow-sm" {%if deal.result == 'PRF' or deal.result == 'EVE'%} style=" border: 3px solid #0d6efd;" {% else %} style=" border: 3px solid #dc3545;" {% endif %}>
+                    {% if deal.img %}
+                        <img src="{{deal.img.url}}" class="card-img-top" alt="deal image" style="height: 220px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'images/no-photo-available.png' %}" class="card-img-top" alt="deal default image" style="height: 220px; object-fit: cover;">
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-title mb-0 text-truncate" style="max-width: 85%;">{{deal.strategy.title}} | {{deal.created_at}}</h6>
+                            <div class="dropdown">
+                                <i class="fa-solid fa-ellipsis-vertical" id="dropdown-strategy-{{deal.pk}}" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; padding: 5px;"></i>
+                                <ul class="dropdown-menu" aria-labelledby="dropdown-strategy-{{deal.pk}}">
+                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#remove-deal-{{deal.pk}}" style="cursor: pointer;">Remove</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr class="mt-1 mb-2">
+                        
+                        <!-- معلومات الصفقة بتنسيق Flex أو عناصر Block منظمة بدل العشوائية -->
+                        <div class="card-text mb-3 flex-grow-1">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Deal:</b></span>
+                                {% if deal.deal_type == "BUY" %}
+                                    <span class="fw-bold" style="color: #0d6efd;">Buy</span>
+                                {% else %}
+                                    <span class="fw-bold" style="color: #dc3545;">Sell</span>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Pair:</b></span>
+                                <span>{{deal.get_pair_display}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Starting Price:</b></span>
+                                <span>{{deal.from_price}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Ending price:</b></span>
+                                <span>{{deal.to_price}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Followed rules:</b></span>
+                                <span>{% if deal.is_followed_rules %}YES{% else %}NO{% endif %}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Result:</b></span>
+                                {% if deal.result == "PRF" %}
+                                    <span class="fw-bold" style="color: #0d6efd;">Profit</span>
+                                {% elif deal.result == "LOS" %}
+                                    <span class="fw-bold" style="color: #dc3545;">Loss</span>
+                                {% else %}
+                                    <span class="fw-bold" style="color: #41464b;">Even</span>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Amount:</b></span>
+                                {% if deal.result == "PRF" %}
+                                    <span class="fw-bold" style="color: #0d6efd;">+{{deal.amount}}$</span>
+                                {% elif deal.result == "LOS" %}
+                                    <span class="fw-bold" style="color: #dc3545;">-{{deal.amount}}$</span>
+                                {% else %}
+                                    <span class="fw-bold" style="color: #41464b;">{{deal.amount}}$</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Buttom Buttons -->
+                        <div class="mt-auto d-flex gap-2">
+                            <a href="#" class="btn btn-outline-primary btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#show-description-in-deal-{{deal.pk}}">Description</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- // End card // -->
+            </div>
+
+            <!-- // Start modal for remove deal // -->
+            <div class="modal fade" id="remove-deal-{{deal.pk}}" tabindex="-1" aria-labelledby="removeDealLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="removeDealLabel">Remove the Deal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Do you really want to remove this deal?
+                        </div>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Remove</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- // End modal for remove deal // -->
+
+            <!-- // Start modal for display the description // -->
+            <div class="modal fade" id="show-description-in-deal-{{deal.pk}}" tabindex="-1" aria-labelledby="showDescriptionInDealLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showDescriptionInDealLabel">Rules of the Strategy</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {{deal.description|linebreaks}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // End modal for display the description // -->
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+<!-- // End the container // -->
+
+
+
+
+
+<!-- // Start the sidebar // -->
+<div class="sidebar border-end fixed-top h-100" style="padding: 20px; color: white; background-color: #454546; width: 260px;">
+  <div class="sidebar-header position-relative">
+
+    <button class="btn btn-ghost btn-sm d-sidebar-narrow-none d-flex" type="button" data-coreui-toggle="unfoldable">
+      <i class="icon icon-lg cil-sidebar-open d-sidebar-narrow-unfoldable"></i>
+      <i class="icon icon-lg cil-sidebar-close d-sidebar-narrow-unfoldable-none"></i>
+    </button>
+  </div>
+  <ul class="sidebar-nav sidebar-nav-tree" data-coreui-navigation>
+    <li class="nav-title"><h4>Trading info</h4></li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{% url 'strategies:show_strategies_url' %}">
+        <i class="nav-icon cil-speedometer"></i>Back to strategies
+      </a>
+    </li>
+
+    <li>
+      <a href="#" class="nav-link active" data-bs-toggle="modal" data-bs-target="#show-rules-in-deal">
+        <i class="nav-icon cil-speedometer"></i>Show the rules
+      </a>
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-speedometer"></i> Strategy: SMC
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-speedometer"></i> Original balance: {{original_balance}}$
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-layers"></i> Current balance: {{current_balance}}$
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-layers"></i> Nums of wining trades: <span style="color: #0d6efd;">{{nums_of_wining}}</span>
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-layers"></i> Nums of losing trades: <span style="color: #dc3545;">{{nums_of_losing}}</span>
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-layers"></i> Total profit: <span style="color: #0d6efd;">+{{total_profit}}$</span>
+    </li>
+    <li class="nav-item">
+        <i class="nav-icon cil-layers"></i> Total loss: <span style="color: #dc3545;">-{{total_loss}}$</span>
+    </li>
+</ul>
+
+
+</div>
+<!-- // End the sidebar // -->
+
+
+
+<!-- // Start modal for display the rules // -->
+<div class="modal fade" id="show-rules-in-deal" tabindex="-1" aria-labelledby="showRulesInDealLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="showRulesInDealLabel">Rules of the Strategy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{the_rules|linebreaks}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- // End modal for display the rules // -->
+
+
+</main>
+
+
+
+{% endblock content %}

@@ -46,7 +46,7 @@
                     <b>Created at: </b>{{strat.created_at}}<br>
                     <b>Updated at: </b>{{strat.updated_at}}
                 </p>
-                <a href="#" class="btn btn-primary">Deals</a>
+                <a href="{% url 'deals:show_deals_url' strat.pk %}" class="btn btn-primary">Deals</a>
                 <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#show-rules-{{strat.pk}}">Show rules</a>
             </div>
         </div>
