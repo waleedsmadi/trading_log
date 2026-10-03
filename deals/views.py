@@ -4,6 +4,7 @@ from .models import Deal
 from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.http import HttpResponseForbidden
+from .forms import CreateDealForm
 
 
 @login_required(login_url='login:login_view_url')
@@ -36,6 +37,7 @@ def show_deals(request, strategy_id):
          
 
     return render(request, 'deals/deals.html', {'deals': deals,
+                                                'strategy_id': strategy.pk,
                                                 "the_rules": the_rules,
                                                 "original_balance": original_balance,
                                                 "nums_of_wining": nums_of_wining,
@@ -44,3 +46,23 @@ def show_deals(request, strategy_id):
                                                 "total_profit": total_profit,
                                                 "total_loss": total_loss})
    
+
+
+def create_deal(request, strategy_id):
+    strategy = get_object_or_404(Strategy, pk=strategy_id)
+
+    if strategy.user != request.user:
+        return HttpResponseForbidden()
+
+    create_deal_form = CreateDealForm()
+
+    if request.method == "POST":
+        create_deal_form = CreateDealForm(request.POST, request.FILES)
+        if create_deal_form.is_valid():
+            deal = create_deal_form.save(commit=False)
+            deal.strategy = strategy
+            deal.save()
+            return redirect('deals:show_deals_url', strategy_id=strategy.pk)
+        else:
+            return render(request, 'deals/create_deal.html', {'create_deal_form': create_deal_form})
+    return render(request, 'deals/create_deal.html', {'create_deal_form': create_deal_form})

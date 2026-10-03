@@ -131,7 +131,18 @@ class CreateDealForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         required_fields = ['pair', 'deal_type', 'from_price', 'to_price', 'is_followed_rules', 'result', 'amount']
-
+        self.fields['deal_type'].choices = [
+            choice for choice in self.fields['deal_type'].choices
+            if choice[0] != ''
+        ]
+        self.fields['is_followed_rules'].choices = [
+            choice for choice in self.fields['is_followed_rules'].choices
+            if choice[0] != ''
+        ]
+        self.fields['result'].choices = [
+            choice for choice in self.fields['result'].choices
+            if choice[0] != ''
+        ]
         for name, field in self.fields.items():
             if name in required_fields:
                 field.required = True

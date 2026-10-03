@@ -30,6 +30,11 @@ class Result(models.TextChoices):
     loss = "LOS", "Loss"
     even = "EVE", "Even"
 
+
+class IsFollowedRules(models.TextChoices):
+    YES = "YES", "Yes"
+    NO = "NO", "No"
+
 class Deal(models.Model):
     strategy = models.ForeignKey(
         to=Strategy,
@@ -42,7 +47,7 @@ class Deal(models.Model):
     pair = models.CharField(max_length=8, verbose_name='Pair', choices=Pairs.choices)
     from_price = models.DecimalField(verbose_name='From Price', max_digits=8, decimal_places=2)
     to_price = models.DecimalField(verbose_name='To Price', max_digits=10, decimal_places=2)
-    is_followed_rules = models.BooleanField(verbose_name='Is Followed Rules', default=True)
+    is_followed_rules = models.CharField(max_length=5 ,verbose_name='Is Followed Rules', choices=IsFollowedRules.choices)
     description = models.TextField(verbose_name='Description', null=True, blank=True)
     img = models.ImageField(verbose_name='Chart Image', upload_to='chart/images/%Y%m%d', null=True, blank=True)
     result = models.CharField(max_length=6, verbose_name='Result', choices=Result.choices)
