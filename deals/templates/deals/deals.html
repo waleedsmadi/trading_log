@@ -36,7 +36,7 @@
                             <div class="dropdown">
                                 <i class="fa-solid fa-ellipsis-vertical" id="dropdown-strategy-{{deal.pk}}" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; padding: 5px;"></i>
                                 <ul class="dropdown-menu" aria-labelledby="dropdown-strategy-{{deal.pk}}">
-                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'deals:edit_deal_url' deal.pk %}">Edit</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#remove-deal-{{deal.pk}}" style="cursor: pointer;">Remove</a></li>
                                 </ul>
                             </div>
@@ -67,7 +67,7 @@
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span><b>Followed rules:</b></span>
-                                <span>{% if deal.is_followed_rules %}YES{% else %}NO{% endif %}</span>
+                                <span>{{deal.get_is_followed_rules_display}}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span><b>Result:</b></span>

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.http import HttpResponseForbidden
 from .forms import CreateDealForm
-
+from django.contrib import messages
 
 @login_required(login_url='login:login_view_url')
 def show_deals(request, strategy_id):
@@ -48,6 +48,8 @@ def show_deals(request, strategy_id):
    
 
 
+@ratelimit(key="ip", method="POST", rate="10/m")
+@login_required(login_url="login:login_view_url")
 def create_deal(request, strategy_id):
     strategy = get_object_or_404(Strategy, pk=strategy_id)
 
@@ -66,3 +68,29 @@ def create_deal(request, strategy_id):
         else:
             return render(request, 'deals/create_deal.html', {'create_deal_form': create_deal_form})
     return render(request, 'deals/create_deal.html', {'create_deal_form': create_deal_form})
+
+
+
+@ratelimit(key='ip', method='POST', rate='10/m')
+@login_required(login_url='login:login_view_url')
+def edit_deal(request, deal_id):
+    deal = get_object_or_404(Deal, pk=deal_id)
+
+    if deal.strategy.user != request.user:
+        return HttpResponseForbidden()
+
+    edit_deal_form = CreateDealForm(instance=deal)
+
+    if request.method == "POST":
+        edit_deal_form = CreateDealForm(request.POST, request.FILES, instance=deal)
+        print("VALID:", edit_deal_form.is_valid())
+        print("ERRORS:", edit_deal_form.errors)
+        print("NON FIELD:", edit_deal_form.non_field_errors())
+        if edit_deal_form.is_valid():
+            edit_deal_form.save()
+            messages.success(request, 'The deal has been updated!')
+            return redirect('deals:edit_deal_url', deal_id=deal.pk)
+        else:
+            return render(request, 'deals/edit_deal.html', {'edit_deal_form': edit_deal_form, "strategy_id": deal.strategy.pk})
+
+    return render(request, 'deals/edit_deal.html', {'edit_deal_form': edit_deal_form, "strategy_id": deal.strategy.pk})
