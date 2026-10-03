@@ -23,9 +23,9 @@
             {% for deal in deals %}
             <div class="col">
                 <!-- // Start card // -->
-                <div class="card h-100 shadow-sm" {%if deal.result == 'PRF' or deal.result == 'EVE'%} style=" border: 3px solid #0d6efd;" {% else %} style=" border: 3px solid #dc3545;" {% endif %}>
+                <div class="card h-100 shadow-sm" {%if deal.result == 'PRF' or deal.result == 'EVE'%} style=" border: 5px solid #0d6efd;" {% else %} style=" border: 5px solid #dc3545;" {% endif %}>
                     {% if deal.img %}
-                        <img src="{{deal.img.url}}" class="card-img-top" alt="deal image" style="height: 220px; object-fit: cover;">
+                        <img src="{{deal.img.url}}" class="card-img-top" alt="deal image" style="height: 220px; object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#show-deal-image-{{deal.pk}}">
                     {% else %}
                         <img src="{% static 'images/no-photo-available.png' %}" class="card-img-top" alt="deal default image" style="height: 220px; object-fit: cover;">
                     {% endif %}
@@ -43,7 +43,7 @@
                         </div>
                         <hr class="mt-1 mb-2">
                         
-                        <!-- معلومات الصفقة بتنسيق Flex أو عناصر Block منظمة بدل العشوائية -->
+                        <!-- // Start Deal Detals //-->
                         <div class="card-text mb-3 flex-grow-1">
                             <div class="d-flex justify-content-between mb-1">
                                 <span><b>Deal:</b></span>
@@ -90,6 +90,7 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <!-- // End Deal Detals //-->
 
                         <!-- Buttom Buttons -->
                         <div class="mt-auto d-flex gap-2">
@@ -141,6 +142,22 @@
                 </div>
             </div>
             <!-- // End modal for display the description // -->
+
+            <!-- // Start modal for deal image // -->
+            <div class="modal fade" id="show-deal-image-{{deal.pk}}" tabindex="-1" aria-labelledby="showDealImageLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="width: 1000px; height: 800px;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="showDealImageLabel">The Deal Image</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="{{deal.img.url}}" alt="" style="width: 100%; height: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // End modal for deal image // -->
 
             {% endfor %}
         </div>
