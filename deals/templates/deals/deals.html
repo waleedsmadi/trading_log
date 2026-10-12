@@ -23,7 +23,7 @@
             {% for deal in deals %}
             <div class="col">
                 <!-- // Start card // -->
-                <div class="card h-100 shadow-sm" {%if deal.result == 'PRF' or deal.result == 'EVE'%} style=" border: 5px solid #0d6efd;" {% else %} style=" border: 5px solid #dc3545;" {% endif %}>
+                <div class="card shadow-sm" style="height: 560px;" {%if deal.result == 'PRF' or deal.result == 'EVE'%} style=" border: 5px solid #0d6efd;" {% else %} style=" border: 5px solid #dc3545;" {% endif %}>
                     {% if deal.img %}
                         <img src="{{deal.img.url}}" class="card-img-top" alt="deal image" style="height: 220px; object-fit: cover; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#show-deal-image-{{deal.pk}}">
                     {% else %}
@@ -56,6 +56,10 @@
                             <div class="d-flex justify-content-between mb-1">
                                 <span><b>Pair:</b></span>
                                 <span>{{deal.get_pair_display}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span><b>Lot:</b></span>
+                                <span>{{deal.lot}}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span><b>Starting Price:</b></span>
