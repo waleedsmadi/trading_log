@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import LoginForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
+from django.views.decorators.http import require_POST
+
 
 
 
@@ -29,3 +31,11 @@ def login_view(request):
             return render(request, 'login/login.html', {'form': form})
 
     return render(request, 'login/login.html', {'form': form})
+
+
+
+@ratelimit(key='ip', method='POST', rate='10/m')
+@require_POST
+def logout_view(request):
+        logout(request)
+        return redirect('login:login_view_url')

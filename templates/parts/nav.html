@@ -7,7 +7,10 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav w-100">
         <a class="nav-link active" aria-current="page" href="#">Settings</a>
-        <a class="nav-link ms-auto" style="margin-right: 20px;" href="#">Logout</a>
+        <form action="{% url 'login:logout_view_url' %}" method="post" class="ms-auto" style="margin-right: 20px;">
+          {% csrf_token %}
+          <button class="btn btn-secondary" type="submit">Logout</button>
+        </form>
       </div>
     </div>
   </div>
