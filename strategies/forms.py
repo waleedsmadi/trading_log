@@ -49,13 +49,8 @@ class CreateStrategyForm(forms.ModelForm):
 
     def clean_balance(self):
         balance = self.cleaned_data.get('balance')
-        if not balance:
+        if balance is None:
             raise ValidationError('The `balance` field should not be empty!')
-
-        try:
-            balance = int(balance)
-        except:
-            raise ValidationError('The `balance` field should contains just numbers!')
 
         if balance < 5:
             raise ValidationError('The `balance` field should be 5 or more!')

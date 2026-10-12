@@ -6,6 +6,7 @@ from django_ratelimit.decorators import ratelimit
 from django.http import HttpResponseForbidden
 from .forms import CreateDealForm
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='login:login_view_url')
 def show_deals(request, strategy_id):
@@ -94,3 +95,18 @@ def edit_deal(request, deal_id):
             return render(request, 'deals/edit_deal.html', {'edit_deal_form': edit_deal_form, "strategy_id": deal.strategy.pk})
 
     return render(request, 'deals/edit_deal.html', {'edit_deal_form': edit_deal_form, "strategy_id": deal.strategy.pk})
+
+
+
+
+@ratelimit(key='ip', method='POST', rate='10/m')
+@login_required(login_url='login:login_view_url')
+@require_POST
+def remove_deal(request, deal_id):
+    deal = get_object_or_404(Deal, pk=deal_id)
+
+    if deal.strategy.user != request.user:
+        return HttpResponseForbidden()
+    strategy_id = deal.strategy.pk
+    deal.delete()
+    return redirect('deals:show_deals_url', strategy_id=strategy_id)
