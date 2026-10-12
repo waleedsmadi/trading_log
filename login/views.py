@@ -8,6 +8,8 @@ from django_ratelimit.decorators import ratelimit
 
 @ratelimit(key='ip', method='POST', rate='10/m')
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('strategies:show_strategies_url')
     form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request.POST)
