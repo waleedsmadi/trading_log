@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 class CreateDealForm(forms.ModelForm):
     class Meta:
         model = Deal
-        fields = ['pair', 'deal_type', 'from_price', 'to_price', 'is_followed_rules', 'description', 'img', 'result', 'amount']
+        fields = ['pair', 'deal_type', 'from_price', 'to_price', 'is_followed_rules', 'description', 'img', 'lot', 'result', 'amount']
         widgets = {
             "pair": forms.Select(attrs={
                 'class': 'form-select',
@@ -39,6 +39,11 @@ class CreateDealForm(forms.ModelForm):
 
             'img': forms.FileInput(attrs={
                 'class': 'form-control',
+            }),
+
+            'lot': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'The lot',
             }),
 
             'result': forms.RadioSelect(attrs={
@@ -85,6 +90,19 @@ class CreateDealForm(forms.ModelForm):
         if amount < 0:
             raise ValidationError('The `amount` field should be more or equal to zero!')
         return amount
+
+    def clean_lot(self):
+        lot = self.cleaned_data.get('lot')
+
+        if lot is None:
+            raise ValidationError('The `lot` field should not be empty!')
+
+        if lot <= 0:
+            raise ValidationError('The `lot` field should be more than zero!')
+
+        if lot > 100:
+            raise ValidationError('The `lot` field should be less or equal to 100!')
+        return lot
 
 
     def clean(self):

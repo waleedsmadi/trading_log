@@ -43,6 +43,10 @@
             {% elif field.name == "img" %}
                 <label for="create-deal-img" class="form-label" >Image of the chart</label>
                 {{field}}
+                
+            {% elif field.name == "lot" %}
+                <label for="create-deal-lot" class="form-label">Lot</label>
+                {{field}}
 
             {% elif field.name == "result" %}
                 <label class="form-label">Result</label>

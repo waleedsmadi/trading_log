@@ -52,6 +52,7 @@ class Deal(models.Model):
     img = models.ImageField(verbose_name='Chart Image', upload_to='chart/images/%Y%m%d', null=True, blank=True)
     result = models.CharField(max_length=6, verbose_name='Result', choices=Result.choices)
     amount = models.DecimalField(verbose_name='Amount', max_digits=10, decimal_places=2)
+    lot = models.DecimalField(verbose_name="Lot", max_digits=5, decimal_places=2, default=0.01)
     created_at = models.DateTimeField(verbose_name='Created At', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Updated At', auto_now=True)
 
@@ -70,6 +71,7 @@ class Deal(models.Model):
             models.CheckConstraint(name='chk_deal_from_price', condition=Q(from_price__gt=0)),
             models.CheckConstraint(name='chk_deal_to_price', condition=Q(to_price__gt=0)),
             models.CheckConstraint(name='chk_deal_amount', condition=Q(amount__gte=0)),
+            models.CheckConstraint(name='chk_deal_lot', condition=(Q(lot__gt=0.00)&Q(lot__lte=100.00))),
         ]
 
     def __str__(self):
