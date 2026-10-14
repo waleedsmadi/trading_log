@@ -188,7 +188,7 @@
     </button>
   </div>
   <ul class="sidebar-nav sidebar-nav-tree" data-coreui-navigation>
-    <li class="nav-title"><h4>Trading info</h4></li>
+    <li class="nav-title"><h4>({{strategy_name}}) info</h4></li>
     <li class="nav-item">
       <a class="nav-link active" href="{% url 'strategies:show_strategies_url' %}">
         <i class="nav-icon cil-speedometer"></i>Back to strategies
@@ -234,7 +234,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="showRulesInDealLabel">Rules of the Strategy</h5>
+                <h5 class="modal-title" id="showRulesInDealLabel">Rules of the Strategy ({{strategy_name}})</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

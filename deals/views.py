@@ -39,6 +39,7 @@ def show_deals(request, strategy_id):
 
     return render(request, 'deals/deals.html', {'deals': deals,
                                                 'strategy_id': strategy.pk,
+                                                'strategy_name': strategy.title,
                                                 "the_rules": the_rules,
                                                 "original_balance": original_balance,
                                                 "nums_of_wining": nums_of_wining,
